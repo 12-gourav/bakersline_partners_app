@@ -1,9 +1,8 @@
 import { Link, usePathname, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
-  ScrollView,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -17,6 +16,8 @@ import { Image } from "expo-image";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RegisterAPI } from "../../api/auth-api";
 import Toast from "react-native-toast-message";
+import { GetOrigins } from "../../api/api";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 const Register = () => {
   const [name, setName] = useState<string>("");
@@ -26,6 +27,10 @@ const Register = () => {
   const [address, setAddress] = useState<string>("");
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [originData, setOriginData] = useState([]);
+  const [originLoading, setOriginLoading] = useState(false);
+  const [origin, setOrigin] = useState([]);
+  const [search, setSearch] = useState("");
 
   const router = useRouter();
 
@@ -72,6 +77,13 @@ const Register = () => {
           [{ text: "OK" }]
         );
       }
+      if (origin?.length === 0) {
+        return Alert.alert(
+          "Missing Origins",
+          "Please select at least one origin.",
+          [{ text: "OK" }]
+        );
+      }
       setLoading(true);
 
       const myForm = new FormData();
@@ -86,6 +98,7 @@ const Register = () => {
         name: `photo.jpg`,
         type: "image/jpeg",
       } as any);
+      myForm.append("origins", JSON.stringify(origin));
 
       const result = await RegisterAPI(myForm);
       if (result?.data?.data) {
@@ -131,6 +144,46 @@ const Register = () => {
     }
   };
 
+  const fetchOrigins = async () => {
+    try {
+      setOriginLoading(true);
+
+      const result = await GetOrigins();
+      if (result?.data?.data) {
+        setOriginData(result?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOriginLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrigins();
+  }, []);
+
+  const handleOrigin = (d: any) => {
+    const origins = [...origin];
+
+    const exists = origins.find(
+      (f: any) => f.pincode === d?.pincode && f.name === d?.name
+    );
+
+    let updatedOrigins: any;
+    if (exists) {
+      // Remove the matching item
+      updatedOrigins = origins.filter(
+        (f: any) => !(f.pincode === d?.pincode && f.name === d?.name)
+      );
+    } else {
+      // Add the new item
+      updatedOrigins = [...origins, d];
+    }
+
+    setOrigin(updatedOrigins);
+  };
+  console.log(origin);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAwareScrollView
@@ -205,6 +258,71 @@ const Register = () => {
               onChangeText={(e) => setAddress(e)}
               value={address}
             />
+          </View>
+          <View style={AuthStyles.formGroup}>
+            <Text style={AuthStyles.label}>Origins</Text>
+
+            <View style={AuthStyles.tags}>
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  borderBottomColor: "#e4e4e4",
+                  borderBottomWidth: 1,
+                  height: 40,
+                  marginBottom: 10,
+                }}
+              >
+                <EvilIcons
+                  name="search"
+                  size={24}
+                  color="#777777"
+                  style={{ fontWeight: "600", marginBottom: 5 }}
+                />
+                <TextInput
+                  value={search}
+                  onChangeText={(e) => setSearch(e)}
+                  placeholder="Enter origin name"
+                  style={AuthStyles.tagInput}
+                />
+              </View>
+
+              {originLoading ? (
+                <ActivityIndicator />
+              ) : originData?.filter((f: any) => f.name.includes(search))
+                  ?.length === 0 ? (
+                <Text style={[AuthStyles.label, { textAlign: "center" }]}>
+                  No Origins Available
+                </Text>
+              ) : (
+                originData
+                  ?.filter((f: any) => f.name.includes(search))
+                  ?.map((d: { name: string; pincode: string; _id: string }) => (
+                    <TouchableOpacity
+                      key={d?._id}
+                      style={
+                        origin.find(
+                          (f: any) =>
+                            f.pincode === d?.pincode && f.name === d.name
+                        )
+                          ? AuthStyles.tagOption2
+                          : AuthStyles.tagOption
+                      }
+                      onPress={() =>
+                        handleOrigin({ name: d?.name, pincode: d?.pincode })
+                      }
+                    >
+                      <Feather name="map-pin" size={16} color="#A7774B" />
+                      <View style={AuthStyles.texts}>
+                        <Text style={AuthStyles.textp1}>{d?.pincode}</Text>
+                        <Text>{d?.name}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+              )}
+            </View>
           </View>
           <View style={AuthStyles.formGroup}>
             <Text style={AuthStyles.label}>Upload Adhar Card</Text>

@@ -66,7 +66,7 @@ const FilterModal = ({
               </View>
             </View>
             <View style={ModalStyle.form}>
-              <Text style={ModalStyle.formText}>Payment Status</Text>
+              <Text style={ModalStyle.formText}>Order Status</Text>
               <View style={ModalStyle.tabs}>
                 {data?.map((z) => (
                   <TouchableOpacity

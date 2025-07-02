@@ -14,8 +14,8 @@ const ErrorMsg = (e) => {
 
 export const RegisterAPI = async (myform) => {
   try {
-    console.log(myform)
-    return await axios.post(url + "/register/agent", myform, {
+
+    return await axios.post(url + "/register/shop", myform, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -28,7 +28,7 @@ export const RegisterAPI = async (myform) => {
 
 export const VerifyUserAPI = async (email, otp) => {
   try {
-    return await axios.get(url + "/verify/agent", {
+    return await axios.get(url + "/verify/shop", {
       params: {
         email,
         otp,
@@ -42,7 +42,7 @@ export const VerifyUserAPI = async (email, otp) => {
 
 export const LoginAPI = async (email, password) => {
   try {
-    return await axios.post(url + "/login/agent", {
+    return await axios.post(url + "/login/shop", {
       email,
       password,
     });
@@ -53,7 +53,7 @@ export const LoginAPI = async (email, password) => {
 
 export const LoadUserAPI = async (token) => {
   try {
-    return await axios.get(url + "/load/agent", {
+    return await axios.get(url + "/load/shop", {
       headers: {
         token: token,
       },
@@ -66,7 +66,7 @@ export const LoadUserAPI = async (token) => {
 
 export const ForgotAPI = async (email) => {
   try {
-    return await axios.post(url + "/forgot/agent", { email });
+    return await axios.post(url + "/forgot/shop", { email });
   } catch (error) {
     ErrorMsg(error);
   }
@@ -74,7 +74,7 @@ export const ForgotAPI = async (email) => {
 
 export const ResetPasswordAPI = async (email, password, otp) => {
   try {
-    return await axios.get(url + "/reset/agent", {
+    return await axios.get(url + "/reset/shop", {
       params: {
         email,
         otp,
@@ -89,7 +89,7 @@ export const ResetPasswordAPI = async (email, password, otp) => {
 export const UserUpdateAPI = async (id, name, address, phone, token) => {
   try {
     return await axios.post(
-      url + "/update/agent",
+      url + "/update/shop",
       {
         id,
         name,

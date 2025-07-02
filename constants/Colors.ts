@@ -1,6 +1,6 @@
 
-const pink = "#FF0059"
-const primary = "#002143"
+const pink = "#4A4A4A"
+const primary = "#A7774B"
 
 
 const InfoText = `Please share this OTP only after you have received all items from the shop. Once your parcel is complete and in your hands, then provide the OTP to confirm delivery`

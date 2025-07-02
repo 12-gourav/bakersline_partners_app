@@ -7,7 +7,7 @@ const OrderStyle = StyleSheet.create({
     container: {
         padding: 20,
         width: "100%",
-        flex: 1
+        flex: 1,
     },
     heading: {
         fontSize: 20,
