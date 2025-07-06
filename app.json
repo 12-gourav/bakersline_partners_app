@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Bakersline Partners",
+    "slug": "BakerslinePartners",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon1.jpg",
+    "scheme": "bakerslinepartners",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#000"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "softwareKeyboardLayoutMode": "resize",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon2.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile": "./google-services.json",
+      "notification": {
+        "icon": "./assets/icon.png",
+        "color": "#FF231F7C"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.gourav_bajpai1212.bakerslinepartners"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": ["expo-router", "expo-font"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1a2fbdff-2517-465e-974d-9626c674adbd"
+      }
+    },
+    "assetBundlePatterns": ["**/*"]
+  }
+}

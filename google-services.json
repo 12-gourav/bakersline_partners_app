@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "400556104369",
+    "project_id": "bakersline-partners",
+    "storage_bucket": "bakersline-partners.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400556104369:android:6d1dd4c36731d45cc6a090",
+        "android_client_info": {
+          "package_name": "com.gourav_bajpai1212.bakerslinepartners"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUphbBVgQPUd68Ba2o2jkHkKgAJiAFD1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
