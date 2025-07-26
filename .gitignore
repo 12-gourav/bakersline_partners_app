@@ -39,6 +39,3 @@ yarn-error.*
 app-example
 
 
-*.json
-!firebase-config.json    # (Optional: allow specific config files)
-bakersline-partners-firebase-adminsdk-fbsvc-*.json
