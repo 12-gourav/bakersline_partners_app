@@ -40,12 +40,9 @@ const upcoming = () => {
     fetchRecoprds();
   }, []);
 
-  if(loading){
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
-
-
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fafafa" }}>
@@ -69,6 +66,10 @@ const upcoming = () => {
               )}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ flexGrow: 1 }}
+              refreshing={loading}
+              onRefresh={() => {
+                fetchRecoprds(); 
+              }}
             />
           )}
         </View>
@@ -134,9 +135,7 @@ export const TrackingCard: React.FC<any> = ({ item, handlepush }) => {
           </View>
           <View style={UpcomingStyle.phone}>
             <TouchableOpacity
-              onPress={() =>
-                Linking.openURL(`tel:${item?.agent?.phone}`)
-              }
+              onPress={() => Linking.openURL(`tel:${item?.agent?.phone}`)}
             >
               <FontAwesome name="phone" size={14} color="#000" />
             </TouchableOpacity>

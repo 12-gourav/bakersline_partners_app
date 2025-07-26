@@ -64,7 +64,7 @@ export const DispatchOrderAPI = async (id, otp, token) => {
   }
 };
 
-export const GetAllOrders = async (current, date, limit, query, token) => {
+export const GetAllOrders = async (current, date,status, limit, query, token) => {
   try {
     return await axios.get(url + "/get/supplier/orders", {
       params: {
@@ -72,6 +72,7 @@ export const GetAllOrders = async (current, date, limit, query, token) => {
         date: date,
         limit,
         query,
+        status
       },
       headers: {
         token,
@@ -79,6 +80,22 @@ export const GetAllOrders = async (current, date, limit, query, token) => {
     });
   } catch (error) {
     console.log(error);
+    ErrorMsg(error);
+  }
+};
+
+
+
+export const getAnalyticsAPI = async (token) => {
+  try {
+    return await axios.get(url + "/supplier/analytics", {
+    
+      headers: {
+        token,
+      },
+    });
+  } catch (error) {
+    console.log(error?.response);
     ErrorMsg(error);
   }
 };

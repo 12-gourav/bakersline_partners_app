@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderStyle from "@/styles/order";
@@ -8,11 +8,10 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { primary } from "@/constants/Colors";
-import { useRouter } from "expo-router";
 
 const StatusData = ["paid", "unpaid"];
 
-const payments = () => {
+const payment_details = () => {
   const [isVisible, setIsvisible] = useState<boolean>(false);
   const [filter, setFilter] = useState({ start: "", end: "", status: "" });
   const [query, setQuery] = useState<string>("");
@@ -39,14 +38,6 @@ const payments = () => {
         <Text style={OrderStyle.dis}>
           View detailed records of all your payments and transactions.
         </Text>
-        <SearchBarWithFilter
-          query={query}
-          setQuery={setQuery}
-          setIsvisible={setIsvisible}
-          handleSearch={handleSearch}
-          placeholder={"Search by payment amount or order id"}
-        />
-
         <View style={{ height: "88%" }}>
           <FlatList
             data={["complete", "cancel", "complete", "complete"]}
@@ -56,32 +47,15 @@ const payments = () => {
             style={{ flex: 1, marginTop: 20 }}
           />
         </View>
-
-        {isVisible && (
-          <FilterModal
-            isVisible={isVisible}
-            setIsVisible={setIsvisible}
-            start={start}
-            setStart={setStart}
-            end={end}
-            setEnd={setEnd}
-            status={status}
-            setStatus={setStatus}
-            setFilter={setFilter}
-            filter={filter}
-            data={StatusData}
-          />
-        )}
       </View>
     </SafeAreaView>
   );
 };
 
-export default payments;
+export default payment_details;
 
 export const TrackingCard: React.FC<any> = ({ item }) => {
   const date = new Date();
-  const router = useRouter();
   return (
     <View style={OrderStyle.card}>
       <View style={OrderStyle.payment_card_top}>
@@ -91,16 +65,29 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
             {date.toDateString()}
           </Text>
         </View>
-        <TouchableOpacity
-          style={OrderStyle.payment_card_icon}
-          onPress={() => router.push("/(external)/payment_details")}
-        >
-          <Entypo name="chevron-right" size={16} color="#67b8fb" />
-        </TouchableOpacity>
       </View>
+      <View style={OrderStyle.payment_description}>
+        <Text style={OrderStyle.payment_description_text}>
+          Order Id:{" "}
+          <Text style={{ fontFamily: "bold", fontWeight: 600 }}>BIC1234</Text>
+        </Text>
+        <Text style={OrderStyle.payment_description_text}>
+          View Order Details:{" "}
+          <Text style={{ fontFamily: "bold", fontWeight: 600, color: primary }}>
+            Click Here
+          </Text>
+        </Text>
+        <Text style={OrderStyle.payment_description_text}>
+          Payment Method:{" "}
+          <Text style={{ fontFamily: "bold", fontWeight: 600 }}>
+            Google Pay
+          </Text>
+        </Text>
+      </View>
+
       <View style={OrderStyle.payment_card_line}>
         <View>
-          <Text style={OrderStyle.payment_card_text}>Payment Records</Text>
+          <Text style={OrderStyle.payment_card_text}>Payment Status</Text>
           <View
             style={{
               display: "flex",
@@ -116,7 +103,7 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
                 color={primary}
               />
             </View>
-            <Text>10</Text>
+            <Text>Paid</Text>
           </View>
         </View>
 

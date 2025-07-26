@@ -107,7 +107,7 @@ export const UserUpdateAPI = async (
         shopName,
         shopAddress,
         shopZip,
-        origins
+        origins,
       },
       {
         headers: {
@@ -116,6 +116,24 @@ export const UserUpdateAPI = async (
       }
     );
   } catch (error) {
+    ErrorMsg(error);
+  }
+};
+
+export const savedPushTokenAPI = async (id, token, name) => {
+  try {
+    return await axios.get(url + "/saved/shop/token", {
+      params: {
+        id,
+        name,
+        token,
+      },
+      headers: {
+        token,
+      },
+    });
+  } catch (error) {
+    console.log(error?.response);
     ErrorMsg(error);
   }
 };

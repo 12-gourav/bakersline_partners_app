@@ -1,4 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity, Linking } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+  ActivityIndicator,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderStyle from "@/styles/order";
@@ -7,10 +14,8 @@ import { primary } from "@/constants/Colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import ProductImage from "../../assets/images/p1.jpg";
 import SearchBarWithFilter from "@/components/SearchBarWithFilter";
 import FilterModal from "@/components/modals/FilterModal";
-import Toast from "react-native-toast-message";
 import UpcomingStyle from "@/styles/upcoming";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -18,12 +23,25 @@ import av1 from "../../assets/images/av.png";
 import { GetAllOrders } from "@/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const StatusData = ["complete", "rto", "cancel", "progress", "pending"];
+const StatusData = [
+  "COMPLETE",
+  "RTO",
+  "CANCEL",
+  "PENDING",
+  "DISPATCH",
+  "ASSIGN",
+  "REJECTED BY ADMIN",
+];
 
 const order = () => {
   const [query, setQuery] = useState("");
   const [isVisible, setIsvisible] = useState(false);
-  const [filter, setFilter] = useState({ start: "", end: "", status: "" });
+  const [filter, setFilter] = useState<any>({
+    start: "",
+    end: "",
+    status: "",
+    on: false,
+  });
   const [start, setStart] = useState(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -40,29 +58,35 @@ const order = () => {
   const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [search, setSearch] = useState(false);
   const router = useRouter();
 
   const handleSearch = () => {
-    Toast.show({
-      type: "success",
-      text1: "Hello",
-      text2: "This is some something 👋",
-    });
+    setSearch(!search);
+   
   };
 
   const fetchRecords = useCallback(async () => {
     try {
-      if (!hasMore) return;
+      // if (!hasMore) return;
 
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const result = await GetAllOrders(current, [], 10, query, token);
+      let date: any = [];
+      if (filter.start !== "" && filter.end !== "") {
+        date = [start, end];
+      }
+      const result = await GetAllOrders(
+        current,
+        date,
+        status,
+        10,
+        query,
+        token
+      );
       if (result?.data?.data) {
         const newData = result?.data?.data || [];
-
-        // If fewer than 10 items returned, no more pages
-        setHasMore(newData.length === 10);
-
+        setHasMore(newData.length ===10);
         if (current === 1) {
           setState(newData);
         } else {
@@ -75,7 +99,7 @@ const order = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filter, search, current]);
 
   useEffect(() => {
     fetchRecords();
@@ -100,6 +124,21 @@ const order = () => {
           setIsvisible={setIsvisible}
           handleSearch={handleSearch}
         />
+        <View style={UpcomingStyle.filters}>
+          {filter.status !== "" && (
+            <View style={UpcomingStyle.filter_tag}>
+              <Text style={UpcomingStyle.filterTagText}>{filter.status}</Text>
+            </View>
+          )}
+          {filter.start !== "" && filter.end !== "" && (
+            <View style={UpcomingStyle.filter_tag}>
+              <Text style={UpcomingStyle.filterTagText}>
+                {new Date(filter.start).toLocaleDateString()} -{" "}
+                {new Date(filter.end).toLocaleDateString()}
+              </Text>
+            </View>
+          )}
+        </View>
         <View style={{ height: "88%" }}>
           <FlatList
             data={state}
@@ -114,13 +153,13 @@ const order = () => {
             style={{ flex: 1, marginTop: 20 }}
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={
-              loading ? (
-                <Text style={{ textAlign: "center", padding: 10 }}>
-                  Loading...
-                </Text>
-              ) : null
-            }
+        
+            refreshing={loading}
+            onRefresh={() => {
+              setCurrent(1);
+              setHasMore(true);
+              fetchRecords();
+            }}
           />
         </View>
 

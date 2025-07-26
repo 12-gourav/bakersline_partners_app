@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadUserAPI } from "../api/auth-api";
 import { useDispatch } from "react-redux";
+import { primary } from "@/constants/Colors";
 
 const STORAGE_KEYS = {
   TOKEN: "token",
@@ -34,7 +35,7 @@ const Index = () => {
           const result = await LoadUserAPI(token);
           if (result?.data?.data) {
             dispatch({ type: "load", payload: result?.data?.data });
-            router.replace("/(tabs)/upcoming");
+            router.replace("/(tabs)/home");
           } else {
             router.replace("/(auth)/login");
           }
@@ -42,7 +43,6 @@ const Index = () => {
           router.replace("/(auth)/login");
         }
       } catch (error) {
-        console.log("Startup error:", error);
         router.replace("/(auth)/login");
       } finally {
         setLoading(false);
@@ -55,7 +55,7 @@ const Index = () => {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#000" />
+        <ActivityIndicator size="large" color={primary} />
       </SafeAreaView>
     );
   }

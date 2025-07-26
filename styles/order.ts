@@ -25,7 +25,7 @@ const OrderStyle = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-       
+
         borderRadius: 5,
 
     },
@@ -50,13 +50,13 @@ const OrderStyle = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
-        height:45,
-         marginTop: 20,
-         gap:5
-       
+        height: 45,
+        marginTop: 20,
+        gap: 5
+
     },
     filterbtn: {
-        width:"12%",
+        width: "12%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -229,7 +229,64 @@ const OrderStyle = StyleSheet.create({
     rtoText: {
         color: "#05df72",
         fontSize: 13
+    },
+
+    payment_card_top: {
+        width: "100%",
+        position:"relative"
+       
+    },
+    payment_card_icon: {
+        width: 25,
+        height: 25,
+        backgroundColor: "#e5fbff",
+        borderRadius: 50,
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        position:"absolute",
+        top:6,
+        right:10
+
+    },
+    payment_card_text:{
+        fontFamily:"regular",
+        fontWeight:500,
+        fontSize:14,
+        color:"#9e9e9eff"
+    },
+        payment_card_date:{
+        fontFamily:"bold",
+        fontWeight:600,
+        fontSize:16,
+        color:primary,
+        marginTop:5
+    },
+    payment_card_line:{
+        width:"100%",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"space-between",
+        flexDirection:"row",
+        marginTop:20,
+        paddingBottom:10
+    },
+    payment_description:{
+        marginTop:10,
+        display:"flex",
+        flexDirection:"column",
+        gap:5
+    },
+    payment_description_text:{
+        color:"#777777ff",
+        fontSize:14,
+        fontFamily:"regular",
+        fontWeight:500,
+        includeFontPadding:false
     }
+
+
+
 
 })
 

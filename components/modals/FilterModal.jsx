@@ -27,6 +27,7 @@ const FilterModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [on,setOn] = useState(false)
 
   const handleReset = () => {
     const now = new Date();
@@ -36,6 +37,13 @@ const FilterModal = ({
     setEnd(now);
     setStatus("");
     setFilter({ start: "", end: "", status: "" });
+    setIsVisible(false);
+    setOn(false)
+  };
+
+  const applyFilter = () => {
+    setFilter({ status: status, start: on ? start:"", end:on? end:"" });
+    setIsVisible(false);
   };
 
   return (
@@ -70,7 +78,7 @@ const FilterModal = ({
               <View style={ModalStyle.tabs}>
                 {data?.map((z) => (
                   <TouchableOpacity
-                  key={z}
+                    key={z}
                     style={
                       status === z
                         ? ModalStyle.tabItemActive
@@ -78,7 +86,7 @@ const FilterModal = ({
                     }
                     onPress={() => {
                       setStatus(status === z ? "" : z);
-                      setFilter({ ...filter, status: status });
+                     
                     }}
                   >
                     <Text
@@ -97,10 +105,10 @@ const FilterModal = ({
             <TouchableOpacity style={ModalStyle.clear} onPress={handleReset}>
               <Text style={ModalStyle.clearText}>Clear All</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={ModalStyle.apply}>
+            <TouchableOpacity style={ModalStyle.apply} onPress={() => applyFilter()}>
               <Text style={ModalStyle.applyText}>
                 Apply{" "}
-                {filter?.start && filter?.end && status
+                {on && status
                   ? "(2)"
                   : (filter?.start && filter?.end) || status
                   ? "(1)"
@@ -116,7 +124,8 @@ const FilterModal = ({
                 onChange={(e, selectedDate) => {
                   setStart(selectedDate);
                   setOpen(false);
-                  setFilter({ ...filter, start: start });
+                  setOn(true)
+                
                 }}
               />
             )}
@@ -128,7 +137,8 @@ const FilterModal = ({
                 onChange={(e, selectedDate) => {
                   setEnd(selectedDate);
                   setOpen2(false);
-                  setFilter({ ...filter, end: end });
+                  setOn(true)
+                 
                 }}
               />
             )}

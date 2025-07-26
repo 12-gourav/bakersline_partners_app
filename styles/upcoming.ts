@@ -207,6 +207,27 @@ const UpcomingStyle = StyleSheet.create({
         fontFamily: "bold",
         fontWeight: '500',
         fontSize: 12
+    },
+    filters:{
+        width:"100%",
+        display:"flex",
+        alignItems:"flex-start",
+        gap:10,
+        marginTop:10,
+        flexDirection:"row"
+    },
+    filter_tag:{
+        backgroundColor:"#f1f5f9",
+        padding:5,
+        paddingHorizontal:10,
+        textTransform:"capitalize",
+        borderRadius:5,
+    },
+    filterTagText:{
+        fontFamily:"bold",
+        fontWeight:'600',
+        color:"#62748e",
+        fontSize:13
     }
 
 

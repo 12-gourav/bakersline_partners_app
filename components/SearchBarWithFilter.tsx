@@ -8,12 +8,14 @@ const SearchBarWithFilter = ({
   setQuery,
   query,
   setIsvisible,
-  handleSearch
+  handleSearch,
+  placeholder
 }: {
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   query: string;
   setIsvisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleSearch:any
+  placeholder:any
 }) => {
   return (
     <View style={OrderStyle.search_wrapper}>
@@ -21,7 +23,7 @@ const SearchBarWithFilter = ({
         <TextInput
           value={query}
           onChangeText={(e) => setQuery(e)}
-          placeholder="Search by product or address"
+          placeholder={placeholder||"Search by product or address"}
           style={OrderStyle.barInput}
         />
         <TouchableOpacity style={OrderStyle.searchbtn} onPress={()=>handleSearch()}>
