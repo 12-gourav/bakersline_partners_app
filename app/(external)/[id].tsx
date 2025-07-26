@@ -332,7 +332,7 @@ const OrderCard: React.FC<{ data: any }> = ({ data }) => {
       <View style={DetailStyle.imagewrap}>
         <TouchableOpacity onPress={() => setIsVisible(true)}>
           <Image
-            source={data?.img[0]?.url}
+            source={data?.img[0]?.url?.replace('http://', 'https://')}
             contentFit="cover"
             style={DetailStyle.cardImg}
           />
@@ -373,7 +373,7 @@ const OrderCard: React.FC<{ data: any }> = ({ data }) => {
         )}
       </View>
       <ImageView
-        images={data?.img?.map((l1: any) => ({ uri: l1.url }))}
+        images={data?.img?.map((l1: any) => ({ uri: l1.url?.replace('http://', 'https://') }))}
         imageIndex={0}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}

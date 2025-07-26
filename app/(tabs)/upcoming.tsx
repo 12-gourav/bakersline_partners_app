@@ -108,7 +108,7 @@ export const TrackingCard: React.FC<any> = ({ item, handlepush }) => {
       <View style={UpcomingStyle.productList}>
         <View style={UpcomingStyle.product}>
           <Image
-            source={item?.product[0]?.img[0]?.url}
+            source={item?.product[0]?.img[0]?.url?.replace('http://', 'https://')}
             style={UpcomingStyle.img}
           />
           <View style={UpcomingStyle.productTextWrap}>
