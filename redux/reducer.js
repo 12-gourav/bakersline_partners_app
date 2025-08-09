@@ -18,3 +18,10 @@ export const userReducer = createReducer(
       });
   }
 );
+
+
+export const paymentReducer = createReducer({ payment: {} }, (builder) => {
+  builder.addCase("addPayment", (state, action) => {
+    state.payment = action.payload;
+  });
+});

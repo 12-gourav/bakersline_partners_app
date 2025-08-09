@@ -233,57 +233,81 @@ const OrderStyle = StyleSheet.create({
 
     payment_card_top: {
         width: "100%",
-        position:"relative"
-       
+        position: "relative"
+
     },
     payment_card_icon: {
         width: 25,
         height: 25,
         backgroundColor: "#e5fbff",
         borderRadius: 50,
-        display:"flex",
-        alignItems:"center",
-        justifyContent:"center",
-        position:"absolute",
-        top:6,
-        right:10
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "absolute",
+        top: 6,
+        right: 10
 
     },
-    payment_card_text:{
-        fontFamily:"regular",
-        fontWeight:500,
-        fontSize:14,
-        color:"#9e9e9eff"
+    payment_card_text: {
+        fontFamily: "regular",
+        fontWeight: 500,
+        fontSize: 14,
+        color: "#9e9e9eff"
     },
-        payment_card_date:{
-        fontFamily:"bold",
-        fontWeight:600,
-        fontSize:16,
-        color:primary,
-        marginTop:5
+    payment_card_date: {
+        fontFamily: "bold",
+        fontWeight: 600,
+        fontSize: 16,
+        color: primary,
+        marginTop: 5
     },
-    payment_card_line:{
-        width:"100%",
-        display:"flex",
-        alignItems:"center",
-        justifyContent:"space-between",
-        flexDirection:"row",
-        marginTop:20,
-        paddingBottom:10
+    payment_card_line: {
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        marginTop: 20,
+        paddingBottom: 10
     },
-    payment_description:{
-        marginTop:10,
-        display:"flex",
-        flexDirection:"column",
-        gap:5
+    payment_description: {
+        marginTop: 10,
+        display: "flex",
+        flexDirection: "column",
+        gap: 5
     },
-    payment_description_text:{
-        color:"#777777ff",
-        fontSize:14,
-        fontFamily:"regular",
-        fontWeight:500,
-        includeFontPadding:false
-    }
+    payment_description_text: {
+        color: "#777777ff",
+        fontSize: 14,
+        fontFamily: "regular",
+        fontWeight: 500,
+        includeFontPadding: false
+    },
+    filters: {
+        width: "100%",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 10,
+        marginTop: 10,
+        flexDirection: "row"
+    },
+    filter_tag: {
+        backgroundColor: "#f1f5f9",
+        padding: 5,
+        paddingHorizontal: 10,
+        textTransform: "capitalize",
+        borderRadius: 5,
+    },
+    filterTagText: {
+        fontFamily: "bold",
+        fontWeight: '600',
+        color: "#62748e",
+        fontSize: 13
+    },
+
+
+
 
 
 

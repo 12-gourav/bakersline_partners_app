@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../assets/images/no.png";
+import img from "../assets/images/nodata.png";
 import { Image, Text, View } from "react-native";
 
 type NoDataProps = {

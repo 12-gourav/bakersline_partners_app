@@ -1,35 +1,36 @@
-import { View, Text, FlatList } from "react-native";
-import React, { useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, BackHandler } from "react-native";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderStyle from "@/styles/order";
-import FilterModal from "../../components/modals/FilterModal";
-import SearchBarWithFilter from "@/components/SearchBarWithFilter";
-import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { primary } from "@/constants/Colors";
-
-const StatusData = ["paid", "unpaid"];
+import { useSelector } from "react-redux";
+import {  useRouter } from "expo-router";
 
 const payment_details = () => {
-  const [isVisible, setIsvisible] = useState<boolean>(false);
-  const [filter, setFilter] = useState({ start: "", end: "", status: "" });
-  const [query, setQuery] = useState<string>("");
-  const [start, setStart] = useState(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    return now;
-  });
+  const { payment } = useSelector((state: any) => state.payment);
+const router = useRouter()
 
-  const [end, setEnd] = useState(() => {
-    const now = new Date();
-    now.setHours(23, 59, 59, 999);
-    return now;
-  });
 
-  const [status, setStatus] = useState("");
+  useEffect(() => {
+    const backAction = () => {
+      router.push("/(tabs)/payments");
+      return true;
+    };
 
-  const handleSearch = () => {};
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+
+
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fafafa" }}>
@@ -40,7 +41,7 @@ const payment_details = () => {
         </Text>
         <View style={{ height: "88%" }}>
           <FlatList
-            data={["complete", "cancel", "complete", "complete"]}
+            data={payment?.payments}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => <TrackingCard item={item} />}
             showsVerticalScrollIndicator={false}
@@ -55,27 +56,37 @@ const payment_details = () => {
 export default payment_details;
 
 export const TrackingCard: React.FC<any> = ({ item }) => {
-  const date = new Date();
+  const { payment } = useSelector((state: any) => state.payment);
+  const router = useRouter();
+
   return (
     <View style={OrderStyle.card}>
       <View style={OrderStyle.payment_card_top}>
         <View>
           <Text style={OrderStyle.payment_card_text}>Invoice Date</Text>
           <Text style={OrderStyle.payment_card_date}>
-            {date.toDateString()}
+            {new Date(payment?.date).toDateString()}
           </Text>
         </View>
       </View>
       <View style={OrderStyle.payment_description}>
         <Text style={OrderStyle.payment_description_text}>
           Order Id:{" "}
-          <Text style={{ fontFamily: "bold", fontWeight: 600 }}>BIC1234</Text>
+          <Text style={{ fontFamily: "bold", fontWeight: 600 }}>
+            {item?.orderId}
+          </Text>
         </Text>
         <Text style={OrderStyle.payment_description_text}>
           View Order Details:{" "}
-          <Text style={{ fontFamily: "bold", fontWeight: 600, color: primary }}>
-            Click Here
-          </Text>
+          <TouchableOpacity
+            onPress={() => router.push(`/(external)/${item?.orderId}`)}
+          >
+            <Text
+              style={{ fontFamily: "bold", fontWeight: 600, color: primary }}
+            >
+              Click Here
+            </Text>
+          </TouchableOpacity>
         </Text>
         <Text style={OrderStyle.payment_description_text}>
           Payment Method:{" "}
@@ -103,7 +114,7 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
                 color={primary}
               />
             </View>
-            <Text>Paid</Text>
+            <Text>{item?.paymentStatus}</Text>
           </View>
         </View>
 
@@ -130,7 +141,7 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
                 marginLeft: 5,
               }}
             >
-              600
+              {item?.paymentAmount}
             </Text>
           </View>
         </View>

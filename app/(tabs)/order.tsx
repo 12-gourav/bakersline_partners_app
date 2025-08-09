@@ -22,6 +22,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import av1 from "../../assets/images/av.png";
 import { GetAllOrders } from "@/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoData from "@/components/NoData";
 
 const StatusData = [
   "COMPLETE",
@@ -60,16 +61,14 @@ const order = () => {
   const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState(false);
   const router = useRouter();
+  const [on,setOn] = useState(false)
 
   const handleSearch = () => {
     setSearch(!search);
-   
   };
 
   const fetchRecords = useCallback(async () => {
     try {
-      // if (!hasMore) return;
-
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
       let date: any = [];
@@ -86,7 +85,7 @@ const order = () => {
       );
       if (result?.data?.data) {
         const newData = result?.data?.data || [];
-        setHasMore(newData.length ===10);
+        setHasMore(newData.length === 10);
         if (current === 1) {
           setState(newData);
         } else {
@@ -125,44 +124,54 @@ const order = () => {
           handleSearch={handleSearch}
           placeholder={"Search by Order Name"}
         />
-        <View style={UpcomingStyle.filters}>
-          {filter.status !== "" && (
-            <View style={UpcomingStyle.filter_tag}>
-              <Text style={UpcomingStyle.filterTagText}>{filter.status}</Text>
+
+        {state?.length === 0 && loading===false ? (
+          <NoData message="No Order Exist" />
+        ) : (
+          <View>
+            <View style={UpcomingStyle.filters}>
+              {filter.status !== "" && (
+                <View style={UpcomingStyle.filter_tag}>
+                  <Text style={UpcomingStyle.filterTagText}>
+                    {filter.status}
+                  </Text>
+                </View>
+              )}
+              {filter.start !== "" && filter.end !== "" && (
+                <View style={UpcomingStyle.filter_tag}>
+                  <Text style={UpcomingStyle.filterTagText}>
+                    {new Date(filter.start).toLocaleDateString()} -{" "}
+                    {new Date(filter.end).toLocaleDateString()}
+                  </Text>
+                </View>
+              )}
             </View>
-          )}
-          {filter.start !== "" && filter.end !== "" && (
-            <View style={UpcomingStyle.filter_tag}>
-              <Text style={UpcomingStyle.filterTagText}>
-                {new Date(filter.start).toLocaleDateString()} -{" "}
-                {new Date(filter.end).toLocaleDateString()}
-              </Text>
-            </View>
-          )}
-        </View>
-        <View style={{ height: "88%" }}>
-          <FlatList
-            data={state}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TrackingCard
-                item={item}
-                handlepush={(id: string) => router.push(`/(external)/${id}`)}
+            <View style={{ height: "88%" }}>
+              <FlatList
+                data={state}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TrackingCard
+                    item={item}
+                    handlepush={(id: string) =>
+                      router.push(`/(external)/${id}`)
+                    }
+                  />
+                )}
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1, marginTop: 20 }}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.5}
+                refreshing={loading}
+                onRefresh={() => {
+                  setCurrent(1);
+                  setHasMore(true);
+                  fetchRecords();
+                }}
               />
-            )}
-            showsVerticalScrollIndicator={false}
-            style={{ flex: 1, marginTop: 20 }}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-        
-            refreshing={loading}
-            onRefresh={() => {
-              setCurrent(1);
-              setHasMore(true);
-              fetchRecords();
-            }}
-          />
-        </View>
+            </View>
+          </View>
+        )}
 
         {isVisible && (
           <FilterModal
@@ -177,6 +186,9 @@ const order = () => {
             setFilter={setFilter}
             filter={filter}
             data={StatusData}
+            fetchRecords={fetchRecords}
+            on={on}
+            setOn={setOn}
           />
         )}
       </View>
@@ -214,7 +226,10 @@ export const TrackingCard: React.FC<any> = ({ item, handlepush }) => {
       <View style={UpcomingStyle.productList}>
         <View style={UpcomingStyle.product}>
           <Image
-            source={item?.product[0]?.img[0]?.url?.replace('http://', 'https://')}
+            source={item?.product[0]?.img[0]?.url?.replace(
+              "http://",
+              "https://"
+            )}
             style={UpcomingStyle.img}
           />
           <View style={UpcomingStyle.productTextWrap}>

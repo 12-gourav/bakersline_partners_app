@@ -1,21 +1,31 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderStyle from "@/styles/order";
+import { primary } from "@/constants/Colors";
 import FilterModal from "../../components/modals/FilterModal";
 import SearchBarWithFilter from "@/components/SearchBarWithFilter";
-import Entypo from "@expo/vector-icons/Entypo";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { primary } from "@/constants/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Entypo from "@expo/vector-icons/Entypo";
+import { useDispatch } from "react-redux";
+import { GetPayments } from "@/api/api";
+import NoData from "@/components/NoData";
 
-const StatusData = ["paid", "unpaid"];
+
+const StatusData = ["COMPLETE", "PENDING", "CANCEL"];
 
 const payments = () => {
-  const [isVisible, setIsvisible] = useState<boolean>(false);
-  const [filter, setFilter] = useState({ start: "", end: "", status: "" });
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState("");
+  const [isVisible, setIsvisible] = useState(false);
+  const [filter, setFilter] = useState({
+    start: "",
+    end: "",
+    status: "",
+    on: false,
+  });
   const [start, setStart] = useState(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -29,8 +39,58 @@ const payments = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [state, setState] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [current, setCurrent] = useState(1);
+  const [search, setSearch] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [on, setOn] = useState(false);
 
-  const handleSearch = () => {};
+  const handleSearch = () => {
+    setSearch(!search);
+  };
+
+  const fetchRecords = useCallback(async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+      let date: any = [];
+      if (filter.start !== "" && filter.end !== "") {
+        date = [start, end];
+      }
+      const result = await GetPayments(
+        current,
+        date,
+        query,
+        filter.status,
+        token
+      );
+      if (result?.data?.data) {
+        const newData = result?.data?.data || [];
+        setHasMore(newData.length === 10);
+        if (current === 1) {
+          setState(newData);
+        } else {
+          const temp = [...state, ...newData];
+          setState(temp);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [search, current]);
+
+  useEffect(() => {
+    fetchRecords();
+  }, [fetchRecords]);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      setCurrent((prev) => prev + 1);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fafafa" }}>
@@ -44,19 +104,43 @@ const payments = () => {
           setQuery={setQuery}
           setIsvisible={setIsvisible}
           handleSearch={handleSearch}
-          placeholder={"Search by payment amount or order id"}
+          placeholder="Search by payment method"
         />
-
-        <View style={{ height: "88%" }}>
+        <View style={OrderStyle.filters}>
+          {filter.status !== "" && (
+            <View style={OrderStyle.filter_tag}>
+              <Text style={OrderStyle.filterTagText}>{filter.status}</Text>
+            </View>
+          )}
+          {filter.start !== "" && filter.end !== "" && (
+            <View style={OrderStyle.filter_tag}>
+              <Text style={OrderStyle.filterTagText}>
+                {new Date(filter.start).toLocaleDateString()} -{" "}
+                {new Date(filter.end).toLocaleDateString()}
+              </Text>
+            </View>
+          )}
+        </View>
+        {state?.length === 0 && loading === false ? (
+          <NoData message="No Payment Record Exist" />
+        ) : (
           <FlatList
-            data={["complete", "cancel", "complete", "complete"]}
+            style={{ flex: 1, marginTop: 20 }}
+            data={state}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => <TrackingCard item={item} />}
             showsVerticalScrollIndicator={false}
-            style={{ flex: 1, marginTop: 20 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            refreshing={loading}
+            onRefresh={() => {
+              setCurrent(1);
+              setHasMore(true);
+              fetchRecords();
+            }}
           />
-        </View>
-
+        )}
         {isVisible && (
           <FilterModal
             isVisible={isVisible}
@@ -70,6 +154,9 @@ const payments = () => {
             setFilter={setFilter}
             filter={filter}
             data={StatusData}
+            fetchRecords={handleSearch}
+            on={on}
+            setOn={setOn}
           />
         )}
       </View>
@@ -80,20 +167,34 @@ const payments = () => {
 export default payments;
 
 export const TrackingCard: React.FC<any> = ({ item }) => {
-  const date = new Date();
+  let amount = 0;
+
+  for (const p of item?.payments) {
+    amount = amount + p.paymentAmount;
+  }
+
   const router = useRouter();
+  const dispatch = useDispatch();
   return (
     <View style={OrderStyle.card}>
       <View style={OrderStyle.payment_card_top}>
         <View>
           <Text style={OrderStyle.payment_card_text}>Invoice Date</Text>
           <Text style={OrderStyle.payment_card_date}>
-            {date.toDateString()}
+            {new Date(item?.date).toDateString()}
           </Text>
         </View>
         <TouchableOpacity
           style={OrderStyle.payment_card_icon}
-          onPress={() => router.push("/(external)/payment_details")}
+          onPress={() => {
+            router.push({
+              pathname: "/(external)/payment_details",
+              params: {
+                from: "/payments",
+              },
+            });
+            dispatch({ type: "addPayment", payload: item });
+          }}
         >
           <Entypo name="chevron-right" size={16} color="#67b8fb" />
         </TouchableOpacity>
@@ -116,7 +217,7 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
                 color={primary}
               />
             </View>
-            <Text>10</Text>
+            <Text>{item?.payments?.length}</Text>
           </View>
         </View>
 
@@ -143,7 +244,7 @@ export const TrackingCard: React.FC<any> = ({ item }) => {
                 marginLeft: 5,
               }}
             >
-              600
+              {amount}{" "}
             </Text>
           </View>
         </View>

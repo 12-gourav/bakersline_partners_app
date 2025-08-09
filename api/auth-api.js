@@ -1,7 +1,7 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
 
-const url = "https://bakersline-backend.onrender.com/api/v1";
+const url = "https://api.bakersline.in/api/v1";
 
 const ErrorMsg = (e) => {
   console.log(e);
@@ -120,20 +120,20 @@ export const UserUpdateAPI = async (
   }
 };
 
-export const savedPushTokenAPI = async (id, token, name) => {
+export const savedPushTokenAPI = async (id, expoToken, name,token) => {
   try {
     return await axios.get(url + "/saved/shop/token", {
       params: {
         id,
         name,
-        token,
+        token:expoToken,
       },
       headers: {
         token,
       },
     });
   } catch (error) {
-    console.log(error?.response);
+    console.log(error);
     ErrorMsg(error);
   }
 };

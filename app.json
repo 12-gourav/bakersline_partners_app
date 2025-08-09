@@ -10,8 +10,8 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#000"
+      "resizeMode": "contain",
+      "backgroundColor": "#fffaf3"
     },
     "ios": {
       "supportsTablet": true
@@ -24,18 +24,24 @@
       },
       "googleServicesFile": "./google-services.json",
       "notification": {
-        "icon": "./assets/icon.png",
+        "icon": "./assets/icon2.png",
         "color": "#FF231F7C"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.gourav_bajpai1212.bakerslinepartners"
+      "package": "com.gourav_bajpai1212.bakerslinepartners",
+      "permissions": ["NOTIFICATIONS"]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-notifications",
+      "expo-web-browser"
+    ],
     "experiments": {
       "typedRoutes": true
     },

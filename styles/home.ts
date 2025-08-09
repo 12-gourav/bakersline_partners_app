@@ -118,11 +118,13 @@ const HomeStyles = StyleSheet.create({
         fontWeight: "600",
         fontFamily: "bold",
         lineHeight: 20,
+        textTransform:"capitalize"
     },
     sm: {
         fontSize: 13,
         color: "gray",
-        fontFamily: "regular"
+        fontFamily: "regular",
+    
     },
     graph: {
         borderWidth: 1,

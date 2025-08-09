@@ -1,4 +1,4 @@
-import { View, ActivityIndicator } from "react-native";
+import {  ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,7 +13,7 @@ const STORAGE_KEYS = {
 };
 
 const Index = () => {
-  const [loading, setLoading] = useState(true); // default loading = true
+  const [loading, setLoading] = useState(true); 
   const router = useRouter();
   const dispatch = useDispatch();
 

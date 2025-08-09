@@ -258,11 +258,11 @@ const DetailStyle = StyleSheet.create({
     },
         COMPLETE: {
         backgroundColor: "#dbeafe",
-        color: "#1447e6",
+        color: "#2b7fff",
         borderRadius: 5,
         padding: 6,
         marginTop: 6,
-        width: 70, textAlign: "center",
+        width: 100, textAlign: "center",
         fontWeight: '500'
     },
         CANCEL: {

@@ -1,7 +1,8 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
 
-const url = "https://bakersline-backend.onrender.com/api/v1";
+// const url = "https://bakersline-backend.onrender.com/api/v1";
+const url = "https://api.bakersline.in/api/v1";
 
 const ErrorMsg = (e) => {
   console.log(e);
@@ -96,6 +97,29 @@ export const getAnalyticsAPI = async (token) => {
     });
   } catch (error) {
     console.log(error?.response);
+    ErrorMsg(error);
+  }
+};
+
+
+
+
+export const GetPayments = async (current,date,query,status,token) => {
+  try {
+    return await axios.get(url + "/supplier/payments", {
+      params:{
+        page:current,
+        date,
+        query,
+        limit:10,
+        status
+      },
+      headers: {
+        token,
+      },
+    });
+  } catch (error) {
+    console.log(error);
     ErrorMsg(error);
   }
 };

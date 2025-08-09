@@ -24,10 +24,12 @@ const FilterModal = ({
   setFilter,
   filter,
   data,
+  fetchRecords,
+  on,
+  setOn
 }) => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const [on,setOn] = useState(false)
 
   const handleReset = () => {
     const now = new Date();
@@ -39,11 +41,13 @@ const FilterModal = ({
     setFilter({ start: "", end: "", status: "" });
     setIsVisible(false);
     setOn(false)
+    fetchRecords()
   };
 
   const applyFilter = () => {
     setFilter({ status: status, start: on ? start:"", end:on? end:"" });
     setIsVisible(false);
+    fetchRecords();
   };
 
   return (
