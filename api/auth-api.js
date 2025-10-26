@@ -1,7 +1,7 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
 
-const url = "https://api.bakersline.in/api/v1";
+const url = "https://www.api.bakersline.in/api/v1";
 
 const ErrorMsg = (e) => {
   console.log(e);
